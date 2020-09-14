@@ -34,5 +34,5 @@ class GetByLocator(object):
         by, value = locator.split('=')
         if by not in By.__dict__.values():
             raise TypeError("不存在此查找元素方法")
-        ele = self.driver.find_elements(by, value)
-        return ele
+        eles = self.driver.find_elements(by, value)
+        return eles
