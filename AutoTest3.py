@@ -5,14 +5,11 @@ Created on 2020年9月14日下午3:59:51
 @file:AutoTest1.py
 '''
 
-import os
 import time
-from tkinter import filedialog
-import tkinter
+import tkinter.filedialog
 
 from Common.CaseInfo import CaseInfo
 from Common.CaseStepList import CaseStepList
-from Common.conf_dirs import test_xlsx
 from Common.ref_invoke import run_keywords_method
 from Utils.HandleExcel import HandleExcel
 
@@ -26,35 +23,20 @@ class Application(tkinter.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
-        self.filePath = tkinter.StringVar()
-        self.pack()
-        self.create_widgets()
+#         self.pack()
+        self.path = tkinter.StringVar()
+        self.create_application()
 
-    def create_widgets(self):
-        # 获取文件
-        self.getFile_bt = tkinter.Button(self)
-        self.getFile_bt['width'] = 15
-        self.getFile_bt['height'] = 1
-        self.getFile_bt["text"] = "打开"
-        self.getFile_bt["command"] = self._getFile
-        self.getFile_bt.pack(side="left")
-
-        # 显示文件路径
-        self.filePath_en = tkinter.Entry(self,  width=30)
-        self.filePath_en.pack(side="top")
-        self.filePath_en.delete(0, "end")
-        self.filePath_en.insert(0, "请选择文件")
-
-        # test_xlsx + '/关键字驱动测试用例2.xls'
-        self.handle_excel = HandleExcel(file_path=self.filePath_en)
-
-        # 执行用例按钮
-        self.excute_bt = tkinter.Button(self)
-        self.excute_bt["text"] = "执行测试用例"
-        self.excute_bt['width'] = 15
-        self.excute_bt['height'] = 1
-        self.excute_bt.pack(side="right")
-        self.excute_bt["command"] = self.run_testcase
+    def create_application(self):
+        #         self.master.geometry("600*300")
+        #         输入框，标记，按键
+        tkinter.Button(self.master, text="选择用例", command=self._selectPath).grid(
+            row=0, column=1)
+        # 输入框绑定变量path
+        tkinter.Entry(self.master, textvariable=self.path).grid(
+            row=0, column=2)
+        tkinter.Button(self.master, text="开始测试", command=self.run_testcase, fg="green").grid(
+            row=0, column=3)
 
     def get_all_testcases_sheetname(self):
         """获取所有测试用例"""
@@ -106,6 +88,7 @@ class Application(tkinter.Frame):
 
     def run_testcase(self):
         """执行测试用例"""
+        self.handle_excel = HandleExcel(file_path=self.path.get())
         try:
             case_sheets = self.get_all_testcases_sheetname()
             for i in range(len(case_sheets)):
@@ -128,20 +111,18 @@ class Application(tkinter.Frame):
             raise
 
     # 打开文件并显示路径
-    def _getFile(self):
-        default_dir = r"文件路径"
-        self.filePath = tkinter.filedialog.asksaveasfilename(
-            title=u'选择文件', initialdir=(os.path.expanduser(default_dir)))
-        self.filePath_en.delete(0, "end")
-        self.filePath_en.insert(0, self.filePath)
+    def _selectPath(self):
+        # 选择文件path_接收文件地址
+        self.path_ = tkinter.filedialog.askopenfilename()
+        # 通过replace函数替换绝对文件地址中的/来使文件可被程序读取
+        # 注意：\\转义后为\，所以\\\\转义后为\\
+        self.path_ = self.path_.replace("/", "\\")
+        # path设置path_的值
+        self.path.set(self.path_)
 
 if __name__ == '__main__':
 
     root = tkinter.Tk()
-    root.title('selenium关键字驱动平台')
-    root.geometry("500x300")
-    root.resizable(width=False, height=False)
-
+    root.title('selenium关键字驱动')
     app = Application(master=root)
-
     app.mainloop()
