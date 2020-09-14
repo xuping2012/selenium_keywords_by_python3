@@ -6,7 +6,12 @@
 # @Software: PyCharm
 # @define  : function
 
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
+from Utils.HandleLogging import logger
 
 
 class GetByLocator(object):
@@ -15,6 +20,18 @@ class GetByLocator(object):
     def __init__(self, driver):
         self.driver = driver
 
+    @logger("等待元素可见")
+    def wait_eleVisisble(self, locator, wait_time=30):
+        """
+                        显示等待元素可见
+        :param locator:
+        :param wait_time:
+        :return:
+        """
+        WebDriverWait(self.driver, wait_time).until(
+            EC.visibility_of_element_located(locator))
+
+    @logger("查找元素")
     def get_ele_locator(self, locator):
         """
         locator：By=value
@@ -23,8 +40,13 @@ class GetByLocator(object):
         by, value = locator.split('=')
         if by not in By.__dict__.values():
             raise TypeError("不存在此查找元素方法")
-        ele = self.driver.find_element(by, value)
-        return ele
+        try:
+            self.wait_eleVisisble((by, value))
+            ele = self.driver.find_element(by, value)
+        except:
+            raise NoSuchElementException
+        else:
+            return ele
 
     def get_eles_locator(self, locator):
         """

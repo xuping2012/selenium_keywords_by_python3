@@ -24,7 +24,7 @@ class TestCase(unittest.TestCase):
     @logger("main")
     def test_cases_by_keywords(self):
         """运行主程序读取excel数据"""
-        self.handle_excel.set_rsheet_index_or_name()
+        self.handle_excel.set_sheet_index_or_name()
         case_lines = self.handle_excel.get_max_rows
         for i in range(1, case_lines):
             is_run = self.handle_excel.get_cell(i, 2)
@@ -46,7 +46,7 @@ class TestCase(unittest.TestCase):
         """运行主程序读取excel数据"""
         sheets = self.handle_excel.get_all_sheets
         for j in range(len(sheets)):
-            self.handle_excel.set_rsheet_index_or_name(j)
+            self.handle_excel.set_sheet_index_or_name(j)
             case_lines = self.handle_excel.get_max_rows
             for i in range(1, case_lines):
                 is_run = self.handle_excel.get_cell(i, 2)

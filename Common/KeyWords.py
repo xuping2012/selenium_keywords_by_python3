@@ -26,7 +26,9 @@ curTime = dt_format.hour_minute_seconds
 
 
 class KeyWordsMethod(object):
-    """先封装selenium关键字方法，类似pom中的basepage"""
+    """
+            先封装selenium关键字方法，类似pom中的basepage
+    """
 
     @logger("打开浏览器")
     def open_browser(self, *args):
@@ -77,15 +79,9 @@ class KeyWordsMethod(object):
         :return:
         """
         key = args[0]
-        locator = key.split("=")
         browser_driver = GetByLocator(self.driver)
-        try:
-            self.wait_eleVisisble(tuple(locator))
-            ele = browser_driver.get_ele_locator(key)
-        except:
-            raise NoSuchElementException
-        else:
-            return ele
+        ele = browser_driver.get_ele_locator(key)
+        return ele
 
     @logger("多个元素定位")
     def get_elements(self, *args):

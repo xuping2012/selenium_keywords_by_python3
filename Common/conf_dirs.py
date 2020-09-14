@@ -7,6 +7,8 @@
 # @contact: 125197291@qq.com
 
 
+"""工程中的所用到的目录结构"""
+
 import os
 
 basepath = os.path.abspath(os.path.dirname(__file__))
@@ -21,5 +23,4 @@ screen_dir = basepath.replace("Common", "Screenshots")
 
 log_dir = basepath.replace("Common", "Logs")
 
-if __name__ == '__main__':
-    print(screen_dir)
+test_xlsx = basepath.replace("Common", "xlsx_back")
