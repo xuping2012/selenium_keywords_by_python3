@@ -80,14 +80,15 @@ class HandleTestCase():
                 res = run_keywords_method(key_words=caseStepList[i].key_words, locator=caseStepList[
                                           i].locator, content=caseStepList[i].content)
                 execute_time = "{:.2f}s".format(time.time() - start)
-                self.handle_excel.write_cell_result(i + 1, 5, res)
             except:
                 execute_time = "{:.2f}s".format(time.time() - start)
-                self.handle_excel.write_cell_result(i + 1, 5, res, "red")
+                self.handle_excel.write_cell_result(i + 1, 6, res, "red")
                 return "failed"
+            else:
+                self.handle_excel.write_cell_result(i + 1, 6, res)
             finally:
                 self.handle_excel.write_cell_result(
-                    i + 1, 6, execute_time, "white")
+                    i + 1, 7, execute_time, "white")
         return "pass"
 
     def run_testcase(self):

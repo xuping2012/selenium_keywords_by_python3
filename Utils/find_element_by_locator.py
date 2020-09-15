@@ -14,7 +14,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from Utils.HandleLogging import logger
 
 
-class GetByLocator(object):
+class FindElementByLocator(object):
     """封装了selenium一些非关键字应用的方法，通过从excel测试用例中获取数据并返回元素到关键字中应用"""
 
     def __init__(self, driver):
@@ -32,7 +32,7 @@ class GetByLocator(object):
             EC.visibility_of_element_located(locator))
 
     @logger("查找元素")
-    def get_ele_locator(self, locator):
+    def fnd_ele_by_locator(self, locator):
         """
         locator：By=value
         :return:ele

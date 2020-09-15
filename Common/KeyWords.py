@@ -17,7 +17,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from Common.conf_dirs import screen_dir
 from Utils.DateTimeFormat import DateTimeFormat
 from Utils.HandleLogging import logger
-from Utils.get_by_locator import GetByLocator
+from Utils.find_element_by_locator import FindElementByLocator
 
 
 # 获取当前系统时间
@@ -79,8 +79,8 @@ class KeyWordsMethod(object):
         :return:
         """
         key = args[0]
-        browser_driver = GetByLocator(self.driver)
-        ele = browser_driver.get_ele_locator(key)
+        browser_driver = FindElementByLocator(self.driver)
+        ele = browser_driver.fnd_ele_by_locator(key)
         return ele
 
     @logger("多个元素定位")
@@ -91,7 +91,7 @@ class KeyWordsMethod(object):
         :return:
         """
         key = args[0]
-        browser_driver = GetByLocator(self.driver)
+        browser_driver = FindElementByLocator(self.driver)
         try:
             eles = browser_driver.get_eles_locator(key)
         except:
@@ -117,7 +117,10 @@ class KeyWordsMethod(object):
         :return:
         """
         key, value = args[0], args[1]
-        self.get_element(key).send_keys(value)
+        try:
+            self.get_element(key).send_keys(value)
+        except:
+            raise
 
     @logger("点击元素")
     def click_element(self, *args):

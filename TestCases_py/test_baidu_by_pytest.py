@@ -6,26 +6,24 @@
 
 
 import time
-import unittest
 
-from ddt import ddt, data
+import pytest
 
 from Common.HandleTestCase import HandleTestCase
 from Common.conf_dirs import excel_path
 from Utils.HandleLogging import logger
 
 
-@ddt
-class Cases(unittest.TestCase):
+class TestCase():
     """执行关键字测试用例程序入口"""
 
     handle_testcase = HandleTestCase(
-        case_name=excel_path + "/关键字驱动测试用例.xlsx")
+        case_name=excel_path + "/关键字驱动测试用例.xls")
     testcase_sheets = handle_testcase.get_all_testcases_sheetname()
     i = 1
 
     @logger("test_cases_by_keywords")
-    @data(*testcase_sheets)
+    @pytest.mark.parametrize("testcase_sheet", testcase_sheets)
     def test_cases_by_keywords(self, testcase_sheet):
         """运行主程序读取excel数据"""
         testcase_stepinfo = self.handle_testcase.add_testcase_step_by_sheetname(

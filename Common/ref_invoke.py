@@ -11,7 +11,7 @@ from Common.KeyWords import KeyWordsMethod
 keyWords_method = KeyWordsMethod()
 
 
-@logger("ref_invoke")
+@logger("反射字符串调用类方法")
 def run_keywords_method(key_words, locator="", content="None"):
     """
            利用python反射机制
@@ -26,11 +26,10 @@ def run_keywords_method(key_words, locator="", content="None"):
                 else:
                     keyWords_function(locator)
             else:
-                keyWords_function(locator, int(content))
+                keyWords_function(locator, content)
         except:
             return "failed"
         else:
             return "pass"
     else:
-        #         print("该关键字:{}操作不存在!!!".format(key_words))
         raise AttributeError("该关键字:{}操作不存在!".format(key_words))

@@ -6,15 +6,17 @@
 
 
 import time
+import unittest
 
-import pytest
+from ddt import ddt, data
 
 from Common.HandleTestCase import HandleTestCase
 from Common.conf_dirs import excel_path
 from Utils.HandleLogging import logger
 
 
-class TestCase():
+@ddt
+class Cases(unittest.TestCase):
     """执行关键字测试用例程序入口"""
 
     handle_testcase = HandleTestCase(
@@ -23,7 +25,7 @@ class TestCase():
     i = 1
 
     @logger("test_cases_by_keywords")
-    @pytest.mark.parametrize("testcase_sheet", testcase_sheets)
+    @data(*testcase_sheets)
     def test_cases_by_keywords(self, testcase_sheet):
         """运行主程序读取excel数据"""
         testcase_stepinfo = self.handle_testcase.add_testcase_step_by_sheetname(
@@ -41,5 +43,3 @@ class TestCase():
                 self.i + 1, 5, result, "red")
         self.handle_testcase.handle_excel.write_cell_result(
             self.i + 1, 6, execute_time, "white")
-if __name__ == '__main__':
-    pytest.main()
