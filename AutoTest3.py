@@ -10,7 +10,7 @@ import tkinter.filedialog
 
 from Common.ref_invoke import run_keywords_method
 from Utils.HandleExcel import HandleExcel
-
+from Utils.HandleLogging import logger
 
 __author__ = "Joe"
 
@@ -45,6 +45,7 @@ class Application(tkinter.Frame):
         tkinter.Button(self.master, text="开始测试", command=self.run_testcase, fg="green").grid(
             row=0, column=3)
 
+    @logger("获取执行用例的sheetname")
     def get_all_testcases_sheetname(self):
         """获取所有测试用例"""
         self.handle_excel.set_sheet_index_or_name("测试用例")
@@ -63,6 +64,7 @@ class Application(tkinter.Frame):
                 case_sheets.append(testcase_info)
         return case_sheets
 
+    @logger("获取执行用例的step_info")
     def add_testcase_step_by_sheetname(self, case_sheet):
         """加载整个sheet的操作步骤"""
         caseStepList = []
@@ -87,6 +89,7 @@ class Application(tkinter.Frame):
             # caseStepList.append(step_info)
         return caseStepList
 
+    @logger("按步骤执行用例")
     def excute_testcases(self, caseStepList):
         """执行测试用例步骤"""
         for i in range(len(caseStepList)):
@@ -105,6 +108,7 @@ class Application(tkinter.Frame):
                     i + 1, 6, execute_time, "white")
         return "pass"
 
+    @logger("执行用例入口")
     def run_testcase(self):
         """执行测试用例"""
         self.handle_excel = HandleExcel(file_path=self.path.get())
