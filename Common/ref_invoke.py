@@ -26,7 +26,7 @@ def run_keywords_method(key_words, locator="", content="None"):
                 else:
                     keyWords_function(locator)
             else:
-                keyWords_function(locator, content)
+                keyWords_function(locator, int(content))
         except:
             return "failed"
         else:
