@@ -5,61 +5,41 @@
 # @contact: 125197291@qq.com
 
 
+import time
 import unittest
 
-from Utils.HandleExcel import HandleExcel
+from ddt import ddt, data
+
+from Common.HandleTestCase import HandleTestCase
+from Common.conf_dirs import excel_path
 from Utils.HandleLogging import logger
 
-from Common.conf_dirs import excel_path
-from Common.ref_invoke import run_keywords_method
 
-
-class TestCase(unittest.TestCase):
+@ddt
+class Cases(unittest.TestCase):
     """执行关键字测试用例程序入口"""
 
-    def setUp(self):
-        self.handle_excel = HandleExcel(
-            file_path=excel_path + "/关键字驱动测试用例.xlsx")
+    handle_testcase = HandleTestCase(
+        case_name=excel_path + "/关键字驱动测试用例.xlsx")
+    testcase_sheets = handle_testcase.get_all_testcases_sheetname()
+    i = 1
 
-    @logger("main")
-    def test_cases_by_keywords(self):
+    @logger("test_cases_by_keywords")
+    @data(*testcase_sheets)
+    def test_cases_by_keywords(self, testcase_sheet):
         """运行主程序读取excel数据"""
-        self.handle_excel.set_sheet_index_or_name()
-        case_lines = self.handle_excel.get_max_rows
-        for i in range(1, case_lines):
-            is_run = self.handle_excel.get_cell(i, 2)
-            if eval(is_run):
-                #case_id = self.handle_excel.get_cell(i, 0)
-                key_words = self.handle_excel.get_cell(i, 3)
-                locator = self.handle_excel.get_cell(i, 4)
-                content = self.handle_excel.get_cell(i, 5)
-                if content == '':
-                    if locator == '':
-                        run_keywords_method(key_words)
-                    else:
-                        run_keywords_method(key_words, locator)
-                else:
-                    run_keywords_method(key_words, locator, content)
-
-    @logger("main2")
-    def run_main2(self):
-        """运行主程序读取excel数据"""
-        sheets = self.handle_excel.get_all_sheets
-        for j in range(len(sheets)):
-            self.handle_excel.set_sheet_index_or_name(j)
-            case_lines = self.handle_excel.get_max_rows
-            for i in range(1, case_lines):
-                is_run = self.handle_excel.get_cell(i, 2)
-                if eval(is_run):
-                    #case_id = self.handle_excel.get_cell(i, 0)
-                    #step_ame = self.handle_excel.get_cell(i, 1)
-                    key_words = self.handle_excel.get_cell(i, 3)
-                    locator = self.handle_excel.get_cell(i, 4)
-                    content = self.handle_excel.get_cell(i, 5)
-                    if content == '':
-                        if locator == '':
-                            run_keywords_method(key_words)
-                        else:
-                            run_keywords_method(key_words, locator)
-                    else:
-                        run_keywords_method(key_words, locator, content)
+        testcase_stepinfo = self.handle_testcase.add_testcase_step_by_sheetname(
+            testcase_sheet.sheet_name)
+        start = time.time()
+        result = self.handle_testcase.excute_testcases(testcase_stepinfo)
+        end = time.time()
+        self.handle_testcase.handle_excel.set_sheet_index_or_name("测试用例")
+        execute_time = "%.2fs" % (end - start)
+        if result == "pass":
+            self.handle_testcase.handle_excel.write_cell_result(
+                self.i + 1, 5, result)
+        else:
+            self.handle_testcase.handle_excel.write_cell_result(
+                self.i + 1, 5, result, "red")
+        self.handle_testcase.handle_excel.write_cell_result(
+            self.i + 1, 6, execute_time, "white")
