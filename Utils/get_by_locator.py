@@ -37,7 +37,7 @@ class GetByLocator(object):
         locator：By=value
         :return:ele
         """
-        by, value = locator.split('=')
+        by, value = locator.split('=', 1)
         if by not in By.__dict__.values():
             raise TypeError("不存在此查找元素方法")
         try:
