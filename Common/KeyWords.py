@@ -40,6 +40,7 @@ class KeyWordsMethod(object):
             self.driver = webdriver.Ie()
         elif browser == 'ff':
             self.driver = webdriver.Firefox()
+        self.browser_driver = FindElementByLocator(self.driver)
 
     @logger("打开网址")
     def get_url(self, *args):
@@ -79,8 +80,7 @@ class KeyWordsMethod(object):
         :return:
         """
         key = args[0]
-        browser_driver = FindElementByLocator(self.driver)
-        ele = browser_driver.fnd_ele_by_locator(key)
+        ele = self.browser_driver.fnd_ele_by_locator(key)
         return ele
 
     @logger("多个元素定位")
@@ -91,9 +91,9 @@ class KeyWordsMethod(object):
         :return:
         """
         key = args[0]
-        browser_driver = FindElementByLocator(self.driver)
+#         browser_driver = FindElementByLocator(self.driver)
         try:
-            eles = browser_driver.get_eles_locator(key)
+            eles = self.browser_driver.get_eles_locator(key)
         except:
             raise NoSuchElementException
         else:
@@ -120,7 +120,7 @@ class KeyWordsMethod(object):
         try:
             self.get_element(key).send_keys(value)
         except:
-            raise
+            raise ValueError("值有误!")
 
     @logger("点击元素")
     def click_element(self, *args):

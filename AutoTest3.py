@@ -94,19 +94,17 @@ class Application(tkinter.Frame):
         """执行测试用例步骤"""
         for i in range(len(caseStepList)):
             start = time.time()
-            try:
-                res = run_keywords_method(key_words=caseStepList[i].key_words, locator=caseStepList[
-                                          i].locator, content=caseStepList[i].content)
+            res = run_keywords_method(key_words=caseStepList[
+                                      i].key_words, locator=caseStepList[i].locator, content=caseStepList[i].content)
+            if res == "pass":
                 execute_time = "{:.2f}s".format(time.time() - start)
-                self.handle_excel.write_cell_result(i + 1, 5, res)
-            except:
+                self.handle_excel.write_cell_result(i + 1, 5, res, "green")
+            else:
                 execute_time = "{:.2f}s".format(time.time() - start)
                 self.handle_excel.write_cell_result(i + 1, 5, res, "red")
-                return "failed"
-            finally:
-                self.handle_excel.write_cell_result(
-                    i + 1, 6, execute_time, "white")
-        return "pass"
+                return res
+            self.handle_excel.write_cell_result(i + 1, 6, execute_time)
+        return res
 
     @logger("执行用例入口")
     def run_testcase(self):
@@ -123,12 +121,13 @@ class Application(tkinter.Frame):
                 self.handle_excel.set_sheet_index_or_name("测试用例")
                 execute_time = "%.2fs" % (end - start)
                 if result == "pass":
-                    self.handle_excel.write_cell_result(i + 1, 5, result)
+                    self.handle_excel.write_cell_result(
+                        i + 1, 5, result, "green")
                 else:
                     self.handle_excel.write_cell_result(
                         i + 1, 5, result, "red")
                 self.handle_excel.write_cell_result(
-                    i + 1, 6, execute_time, "white")
+                    i + 1, 6, execute_time)
 
         except:
             raise

@@ -10,6 +10,9 @@ from Common.KeyWords import KeyWordsMethod
 # 创建实例对象
 keyWords_method = KeyWordsMethod()
 
+FAILED = "failed"
+PASS = "pass"
+
 
 @logger("反射字符串调用类方法")
 def run_keywords_method(key_words, locator="", content="None"):
@@ -28,8 +31,10 @@ def run_keywords_method(key_words, locator="", content="None"):
             else:
                 keyWords_function(locator, content)
         except:
-            return "failed"
+            keyWords_function = getattr(keyWords_method, "quit_browser")
+            keyWords_function()
+            return FAILED
         else:
-            return "pass"
+            return PASS
     else:
         raise AttributeError("该关键字:{}操作不存在!".format(key_words))

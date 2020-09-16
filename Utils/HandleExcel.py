@@ -39,11 +39,12 @@ class HandleExcel(object):
 
     def set_style(self, color):
         """设置xlwd写入单元格样式,根据执行测试用例结果"""
+        color_num = self.colorDict.get(color)
         # 设置背景色
         self.pattern = xlwt.Pattern()
         self.pattern.pattern = xlwt.Pattern.SOLID_PATTERN
         # 根据不同的结果,设置不同的背景色
-        self.pattern.pattern_fore_colour = self.colorDict.get(color, "green")
+        self.pattern.pattern_fore_colour = color_num
         self.style.pattern = self.pattern
         return self.style
 
@@ -91,7 +92,7 @@ class HandleExcel(object):
         data = self.rsh.cell(row, cell).value
         return data
 
-    def write_cell_result(self, row_no, col_no, result, color="green"):
+    def write_cell_result(self, row_no, col_no, result, color="white"):
         """
         xlwd写入结果文件
         row_no:行号, 从1开始的
@@ -105,9 +106,18 @@ class HandleExcel(object):
         """xlwd保存excel文件"""
         self.wb.save(self.file_path)
 
+    @property
+    def get_case_title(self):
+        """获取表头"""
+        cols = self.get_max_cols
+        title = []
+        for t in cols:
+            title.append(t)
+        return title
 
 if __name__ == '__main__':
     handle_excel = HandleExcel(file_path=excel_path + "/关键字驱动测试用例.xls")
+
     # test write same data in excel
 #     for sheet_name in range(len(handle_excel.get_all_sheets)):
 #         handle_excel.set_sheet_index_or_name(sheet_name)
